@@ -32,7 +32,7 @@
     <!-- Set the port to connect to here -->
     <param name="port" type="string" value="/dev/hokuyo_back"/> 
     <param name="intensity" type="bool" value="false"/>
-    <remap from="scan" to="scan_back">
+    <remap from="scan" to="scan_back" />
   </node>
 
 

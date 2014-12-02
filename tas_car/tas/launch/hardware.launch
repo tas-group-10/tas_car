@@ -23,6 +23,7 @@
     <!-- Set the port to connect to here -->
     <param name="port" type="string" value="/dev/hokuyo_front"/> 
     <param name="intensity" type="bool" value="false"/>
+    <remap from="scan" to="scan_front" />
   </node>
 
  <!-- Run laserscanner at the back -->
