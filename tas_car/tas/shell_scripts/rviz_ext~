@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export ROS_HOSTNAME=vettel
+export ROS_MASTER_URI=http://vettel:11311
+
+
+

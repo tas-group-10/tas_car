@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export ROS_HOSTNAME=169.254.10.71
+export ROS_MASTER_URI=http://169.254.10.71:11311
+
+
+
