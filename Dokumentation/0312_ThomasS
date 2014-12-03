@@ -1,5 +1,4 @@
-Erkenntnisse 03.12 Thomas Schamberger
-
+Erkenntnisse 03.12 Thomas Schamberger:
 
 Package Order der von "roscd" gefunden wird befindet sich in /opt/ros/indigo/share/
 Die ausführbare Datei (Phyton-File oder kompiliertes CPP-Programm) befinden sich in /opt/ros/indigo/lib
@@ -7,8 +6,6 @@ Die ausführbare Datei (Phyton-File oder kompiliertes CPP-Programm) befinden sic
 Um "catkin_make" auf dem eingenen Rechner ausführen zu können habe ich folgende Packete installiert
 
 sudo apt-get install ros-indigo-$Packetname
-
-
 In der Zeile $Packetname durch folgendes ersetzen:
 
 wiimote
