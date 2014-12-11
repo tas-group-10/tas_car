@@ -42,7 +42,9 @@ int main(int argc, char** argv){
 
     geometry_msgs::Pose waypoint1;
     waypoint1.position.x = 22.0;
+    //waypoint1.position.x = 1.0;
     waypoint1.position.y = 10.75;
+    //waypoint1.position.y = 1.0;
     waypoint1.position.z = 0.000;
     waypoint1.orientation.x = 0.000;
     waypoint1.orientation.y = 0.000;
@@ -50,6 +52,15 @@ int main(int argc, char** argv){
     waypoint1.orientation.w = 1;
     waypoints.push_back(waypoint1);
 
+    geometry_msgs::Pose waypoint2;
+    waypoint2.position.x = 22.0;
+    waypoint2.position.y = 10.75;
+    waypoint2.position.z = 0.000;
+    waypoint2.orientation.x = 0.000;
+    waypoint2.orientation.y = 0.000;
+    waypoint2.orientation.z = 0;
+    waypoint2.orientation.w = 1;
+    waypoints.push_back(waypoint2);
 
 
 
@@ -61,6 +72,7 @@ int main(int argc, char** argv){
 
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map"; // set target pose frame of coordinates
+    //goal.target_pose.header.frame_id = "base_link";
 
     for(int i = 0; i < waypoints.size(); ++i) { // loop over all goal points, point by point
         goal.target_pose.header.stamp = ros::Time::now(); // set current time

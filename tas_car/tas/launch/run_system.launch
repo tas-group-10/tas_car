@@ -13,6 +13,6 @@
   <!-- Set up move base package-->
   <include file="$(find tas)/launch/move_base.launch" />
 
-  <include file="/home/tas_group_10/catkin_ws/src/ira_laser_tools-master/launch/laserscan_multi_merger.launch" />	
+  <!-- <include file="/home/tas_group_10/catkin_ws/src/ira_laser_tools-master/launch/laserscan_multi_merger.launch" /> -->
 
 </launch>

@@ -23,6 +23,9 @@
     <!-- Set the port to connect to here -->
     <param name="port" type="string" value="/dev/hokuyo_front"/> 
     <param name="intensity" type="bool" value="false"/>
+    <param name="frame_id" value="/laser_front"/>
+    <param name="max_range" value="30.0"/>
+    <remap from="scan" to="scan_front" />
   </node>
 
  <!-- Run laserscanner at the back -->
@@ -32,6 +35,8 @@
     <!-- Set the port to connect to here -->
     <param name="port" type="string" value="/dev/hokuyo_back"/> 
     <param name="intensity" type="bool" value="false"/>
+    <param name="frame_id" value="/laser_back"/>
+    <param name="max_range" value="4.0"/>
     <remap from="scan" to="scan_back" />
   </node>
 
