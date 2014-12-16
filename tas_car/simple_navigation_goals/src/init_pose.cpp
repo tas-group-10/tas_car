@@ -21,6 +21,9 @@ int main(int argc, char **argv)
     init.pose.pose.orientation.y = 0.0;
     init.pose.pose.orientation.z = -0.72;
     init.pose.pose.orientation.w = 0.69;
+    init.pose.covariance[0] = 0.25;
+    init.pose.covariance[7] = 0.25;
+    init.pose.covariance[35] = 0.069;
 
     ros::Rate poll_rate(100);
     while(start.getNumSubscribers() == 0)
@@ -29,13 +32,13 @@ int main(int argc, char **argv)
     }
     init.header.stamp = ros::Time::now(); // set current time
     start.publish(init);
-
+    ros::spinOnce();
     /*ros::Rate loop_rate(1);
 
     while (ros::ok())
     {
 
-        ros::spinOnce();
+
         loop_rate.sleep();
     }*/
 
