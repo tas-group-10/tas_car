@@ -40,10 +40,11 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "simple_navigation_goals"); // init and set name
     std::vector<geometry_msgs::Pose> waypoints; // vector of goals, with position and orientation
 
+    //Set first Goalpoint
     geometry_msgs::Pose waypoint1;
-    waypoint1.position.x = 22.0;
+    waypoint1.position.x = 10.5;//22.0;
     //waypoint1.position.x = 1.0;
-    waypoint1.position.y = 10.75;
+    waypoint1.position.y = 9;//10.75;
     //waypoint1.position.y = 1.0;
     waypoint1.position.z = 0.000;
     waypoint1.orientation.x = 0.000;
@@ -51,18 +52,36 @@ int main(int argc, char** argv){
     waypoint1.orientation.z = 0;
     waypoint1.orientation.w = 1;
     waypoints.push_back(waypoint1);
-
+    //After first curve
     geometry_msgs::Pose waypoint2;
-    waypoint2.position.x = 22.0;
-    waypoint2.position.y = 10.75;
+    waypoint2.position.x = 15.0;
+    waypoint2.position.y = 6.25;
     waypoint2.position.z = 0.000;
     waypoint2.orientation.x = 0.000;
     waypoint2.orientation.y = 0.000;
     waypoint2.orientation.z = 0;
     waypoint2.orientation.w = 1;
-    waypoints.push_back(waypoint2);
-
-
+    waypoints.push_back(waypoint2);  
+    //Before the small door, Laith office
+    geometry_msgs::Pose waypoint3;
+    waypoint3.position.x = 22.0;
+    waypoint3.position.y = 5.5;
+    waypoint3.position.z = 0.000;
+    waypoint3.orientation.x = 0.000;
+    waypoint3.orientation.y = 0.000;
+    waypoint3.orientation.z = 0;
+    waypoint3.orientation.w = 1;
+    waypoints.push_back(waypoint3);
+    //After small door
+    geometry_msgs::Pose waypoint4;
+    waypoint4.position.x = 23.5;
+    waypoint4.position.y = 8.5;
+    waypoint4.position.z = 0.000;
+    waypoint4.orientation.x = 0.000;
+    waypoint4.orientation.y = 0.000;
+    waypoint4.orientation.z = 0;
+    waypoint4.orientation.w = 1;
+    waypoints.push_back(waypoint4);
 
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
 
