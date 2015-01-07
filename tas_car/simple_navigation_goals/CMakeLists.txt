@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   move_base_msgs
   roscpp
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,6 +106,7 @@ include_directories(
 ## Declare a cpp executable
 add_executable(simple_navigation_goals_node src/main.cpp)
 add_executable(send_start src/init_pose.cpp)
+add_executable(slalom src/slalom.cpp)
 
 
 ## Add cmake target dependencies of the executable/library
@@ -116,6 +118,10 @@ target_link_libraries(simple_navigation_goals_node
   ${catkin_LIBRARIES}
 )
 target_link_libraries(send_start
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(slalom
   ${catkin_LIBRARIES}
 )
 #############

@@ -42,76 +42,46 @@ int main(int argc, char** argv){
 
     //Set first Goalpoint
     geometry_msgs::Pose waypoint1;
-    waypoint1.position.x = 10.27;//22.0;
+    waypoint1.position.x = 10.5;//22.0;
     //waypoint1.position.x = 1.0;
-    waypoint1.position.y = 7.05;//10.75;
+    waypoint1.position.y = 9;//10.75;
     //waypoint1.position.y = 1.0;
     waypoint1.position.z = 0.000;
-    waypoint1.orientation.x = 0.0;
-    waypoint1.orientation.y = 0.0;
-    waypoint1.orientation.z = -0.73;
-    waypoint1.orientation.w = 0.676;
+    waypoint1.orientation.x = 0.000;
+    waypoint1.orientation.y = 0.000;
+    waypoint1.orientation.z = 0;
+    waypoint1.orientation.w = 1;
     waypoints.push_back(waypoint1);
     //After first curve
     geometry_msgs::Pose waypoint2;
-    waypoint2.position.x = 11.67;
-    waypoint2.position.y = 6.52;
+    waypoint2.position.x = 15.0;
+    waypoint2.position.y = 6.25;
     waypoint2.position.z = 0.000;
-    waypoint2.orientation.x = 0.0;
-    waypoint2.orientation.y = 0.0;
-    waypoint2.orientation.z = -0.03;
-    waypoint2.orientation.w = 1.0;
+    waypoint2.orientation.x = 0.000;
+    waypoint2.orientation.y = 0.000;
+    waypoint2.orientation.z = 0;
+    waypoint2.orientation.w = 1;
     waypoints.push_back(waypoint2);  
     //Before the small door, Laith office
     geometry_msgs::Pose waypoint3;
-    waypoint3.position.x = 22.62;
-    waypoint3.position.y = 6.02;
+    waypoint3.position.x = 22.0;
+    waypoint3.position.y = 5.5;
     waypoint3.position.z = 0.000;
-    waypoint3.orientation.x = 0.0;
-    waypoint3.orientation.y = 0.0;
-    waypoint3.orientation.z = -0.03;
-    waypoint3.orientation.w = 1.0;
+    waypoint3.orientation.x = 0.000;
+    waypoint3.orientation.y = 0.000;
+    waypoint3.orientation.z = 0;
+    waypoint3.orientation.w = 1;
     waypoints.push_back(waypoint3);
     //After small door
     geometry_msgs::Pose waypoint4;
-    waypoint4.position.x = 23.48;
-    waypoint4.position.y = 7.35;
+    waypoint4.position.x = 23.5;
+    waypoint4.position.y = 8.5;
     waypoint4.position.z = 0.000;
-    waypoint4.orientation.x = 0.0;
-    waypoint4.orientation.y = 0.0;
-    waypoint4.orientation.z = 0.69;
-    waypoint4.orientation.w = 0.72;
+    waypoint4.orientation.x = 0.000;
+    waypoint4.orientation.y = 0.000;
+    waypoint4.orientation.z = 0;
+    waypoint4.orientation.w = 1;
     waypoints.push_back(waypoint4);
-    //Before Lab
-    geometry_msgs::Pose waypoint5;
-    waypoint5.position.x = 23.7;
-    waypoint5.position.y = 18.44;
-    waypoint5.position.z = 0.000;
-    waypoint5.orientation.x = 0.0;
-    waypoint5.orientation.y = 0.0;
-    waypoint5.orientation.z = 0.68;
-    waypoint5.orientation.w = 0.73;
-    waypoints.push_back(waypoint5);
-    //in Lab
-    geometry_msgs::Pose waypoint6;
-    waypoint6.position.x = 22.6;
-    waypoint6.position.y = 19.032;
-    waypoint6.position.z = 0.000;
-    waypoint6.orientation.x = 0.0;
-    waypoint6.orientation.y = 0.0;
-    waypoint6.orientation.z = 1.0;
-    waypoint6.orientation.w = 0.02;
-    waypoints.push_back(waypoint6);
-    //Goal
-    geometry_msgs::Pose waypoint7;
-    waypoint7.position.x = 12.3;
-    waypoint7.position.y = 19.6;
-    waypoint7.position.z = 0.000;
-    waypoint7.orientation.x = 0.0;
-    waypoint7.orientation.y = 0.0;
-    waypoint7.orientation.z = 1.0;
-    waypoint7.orientation.w = 0.02;
-    waypoints.push_back(waypoint7);
 
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
 

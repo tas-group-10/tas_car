@@ -37,7 +37,7 @@ void poseCallback(geometry_msgs::PoseStamped my_pose)
     odom.pose.pose.position.x = my_pose.pose.position.x;
     odom.pose.pose.position.y = my_pose.pose.position.y;
     odom.pose.pose.position.z = my_pose.pose.position.z;
-    odom.pose.pose.position.w = my_pose.pose.position.w;
+    //odom.pose.pose.position.w = my_pose.pose.position.w;
     odom_quat = tf::createQuaternionMsgFromYaw(odom.twist.twist.angular.z);
 
     odom.pose.pose.orientation = odom_quat;
@@ -52,56 +52,56 @@ void poseCallback(geometry_msgs::PoseStamped my_pose)
 
 int main(int argc, char **argv)
 {
-    double x_old = odom.pose.pose.position.x;
-    double y_old = odom.pose.pose.position.y;
-    double z_old = odom.pose.pose.position.z;
+//    double x_old = odom.pose.pose.position.x;
+//    double y_old = odom.pose.pose.position.y;
+//    double z_old = odom.pose.pose.position.z;
 
-	ros::init(argc, argv, "odom_publisher");
-	ros::NodeHandle n;
-	ROS_INFO("Outside");
+//	ros::init(argc, argv, "odom_publisher");
+//	ros::NodeHandle n;
+//	ROS_INFO("Outside");
 	
-    //ros::Subscriber vel_sub = n.subscribe("/velocity", 1000, velCallback);
-	ros::Subscriber pose_sub = n.subscribe("/slam_out_pose", 1000, poseCallback);
-	ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("/odom_new", 50);
+//    //ros::Subscriber vel_sub = n.subscribe("/velocity", 1000, velCallback);
+//	ros::Subscriber pose_sub = n.subscribe("/slam_out_pose", 1000, poseCallback);
+//	ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("/odom_new", 50);
 	
-	ros::Time current_time, last_time;
-	current_time = ros::Time::now();
-	last_time = ros::Time::now();
-	ros::Rate loop_rate(10);
+//	ros::Time current_time, last_time;
+//	current_time = ros::Time::now();
+//	last_time = ros::Time::now();
+//	ros::Rate loop_rate(10);
 	
-	while (n.ok())
-    {
-        double roll, pitch, yaw;
+//	while (n.ok())
+//    {
+//        double roll, pitch, yaw;
 
-        current_time = ros::Time::now();
-        t_diff = current_time - last_time;
-        odom.twist.twist.linear.x = (odom.pose.pose.position.x - x_old)/t_diff;
-        odom.twist.twist.linear.y = (odom.pose.pose.position.y - y_old)/t_diff;
-        odom.twist.twist.linear.z = (odom.pose.pose.position.z - z_old)/t_diff;
+//        current_time = ros::Time::now();
+//        double t_diff = current_time - last_time;
+//        odom.twist.twist.linear.x = (odom.pose.pose.position.x - x_old)/t_diff;
+//        odom.twist.twist.linear.y = (odom.pose.pose.position.y - y_old)/t_diff;
+//        odom.twist.twist.linear.z = (odom.pose.pose.position.z - z_old)/t_diff;
 
-        tf::Matrix3x3(odom_quat).getRPY(roll, pitch, yaw);
+//        tf::Matrix3x3(odom_quat).getRPY(roll, pitch, yaw);
 
-        odom.twist.twist.angular.x = (roll - r_old)/last_time;
-        odom.twist.twist.angular.y = (pitch - p_old)/last_time;
-        odom.twist.twist.angular.z = (yaw - y_old)/last_time;
+//        odom.twist.twist.angular.x = (roll - r_old)/t_diff;
+//        odom.twist.twist.angular.y = (pitch - p_old)/t_diff;
+//        odom.twist.twist.angular.z = (yaw - y_old)/t_diff;
 
-		//printf("Position: %f, %f, %f", odom.pose.pose.position.x, odom.pose.pose.position.y, odom.pose.pose.position.z);
-		odom_pub.publish(odom);
-		ros::spinOnce();
+//		//printf("Position: %f, %f, %f", odom.pose.pose.position.x, odom.pose.pose.position.y, odom.pose.pose.position.z);
+//		odom_pub.publish(odom);
+//		ros::spinOnce();
 
-        odom.pose.pose.position.x - x_old;
-        odom.pose.pose.position.y - y_old;
-        odom.pose.pose.position.z - z_old;
-        roll = r_old;
-        pitch = p_old;
-        yaw = y_old;
-
-
+//        odom.pose.pose.position.x - x_old;
+//        odom.pose.pose.position.y - y_old;
+//        odom.pose.pose.position.z - z_old;
+//        roll = r_old;
+//        pitch = p_old;
+//        yaw = y_old;
 
 
-		last_time = current_time;
-		loop_rate.sleep();
-	}
+
+
+//		last_time = current_time;
+//		loop_rate.sleep();
+//	}
 	
 	return 0;
 }
