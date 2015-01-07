@@ -49,6 +49,7 @@ void control::cmdCallback(const geometry_msgs::Twist::ConstPtr& msg)
 
     cmd_steeringAngle = 1500 + 500/30*cmd_steeringAngle;
 
+
     if(cmd_steeringAngle > 2000)
     {
         cmd_steeringAngle = 2000;
@@ -64,33 +65,3 @@ void control::wiiCommunicationCallback(const std_msgs::Int16MultiArray::ConstPtr
     control_Mode.data = msg->data[0];
     control_Brake.data = msg->data[1];
 }
-
-//geometry_msgs::Vector3 control::P_Controller()
-//{
-//    current_ServoMsg.x = previous_ServoMsg.x + Fp*(cmd_linearVelocity - odom_linearVelocity);
-
-//    current_ServoMsg.y = cmd_steeringAngle;
-
-
-//    if(current_ServoMsg.x > 1580)
-//    {
-//        current_ServoMsg.x = 1580;
-//    }
-//    else if(current_ServoMsg.x < 1300)
-//    {
-//        current_ServoMsg.x = 1300;
-//    }
-
-//    if(current_ServoMsg.y > 2000)
-//    {
-//        current_ServoMsg.y = 2000;
-//    }
-//    else if(current_ServoMsg.y < 1000)
-//    {
-//        current_ServoMsg.y = 1000;
-//    }
-
-//    previous_ServoMsg = current_ServoMsg;
-
-//    return current_ServoMsg;
-//}
