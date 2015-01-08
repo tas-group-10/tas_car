@@ -55,7 +55,7 @@ int main(int argc, char** argv){
     //After first curve
     geometry_msgs::Pose waypoint2;
     waypoint2.position.x = 11.67;
-    waypoint2.position.y = 6.52;
+    waypoint2.position.y = 6.32;
     waypoint2.position.z = 0.000;
     waypoint2.orientation.x = 0.0;
     waypoint2.orientation.y = 0.0;
@@ -64,7 +64,7 @@ int main(int argc, char** argv){
     waypoints.push_back(waypoint2);  
     //Before the small door, Laith office
     geometry_msgs::Pose waypoint3;
-    waypoint3.position.x = 22.62;
+    waypoint3.position.x = 22.72;
     waypoint3.position.y = 6.02;
     waypoint3.position.z = 0.000;
     waypoint3.orientation.x = 0.0;

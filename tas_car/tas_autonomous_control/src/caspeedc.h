@@ -44,8 +44,8 @@
 
 #define DSMAX   8
 #define DSMED   4
-#define DSSLOW  1.2
-#define DSBREAK 0.2
+#define DSSLOW  1
+#define DSBREAK 0.1
 
 
 /*

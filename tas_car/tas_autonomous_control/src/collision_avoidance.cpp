@@ -1,7 +1,8 @@
 #include "caspeedc.h"
-
+#include <algorithm>
 
 STATES state;
+int dspeed;
 
 void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan){
     //Computation of the index Values of scan.ranges that need to be checked for ostacles
@@ -9,7 +10,18 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan){
     int indexmin = (anzValues/2) - (AVOIDANGLE/2)/((scan->angle_increment/PI)*180);
     int indexmax = (anzValues/2) + (AVOIDANGLE/2)/((scan->angle_increment/PI)*180);
     int i =0;
-    bool checkdistance[4]={false};
+//    bool checkdistance[4]={false};
+//    float minvalue=*std::min_element(&scan.ranges+(indexmin-1),&scan.ranges+(indexmax-1));
+    double minvalue=100;
+    for (i=indexmin-1;i<=(indexmax-1);i++){
+
+        if(scan->ranges[i]<minvalue) minvalue=scan->ranges[i];
+
+    }
+    dspeed=1550+int(minvalue)*10;
+
+
+
 /*
     for (i=indexmin-1;i<=(indexmax-1);i++){
 
@@ -36,7 +48,7 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan){
         state=MAX;
         return;
     }
-    */
+*/
 
 }
 
@@ -53,6 +65,10 @@ int main(int argc, char **argv){
 
     while (ros::ok()){
 
+
+        speed.data=dspeed;
+        dspeed_publisher.publish(speed);
+/*
         switch (state){
 
             case MAX:
@@ -75,7 +91,7 @@ int main(int argc, char **argv){
                 dspeed_publisher.publish(speed);
                 break;
         }
-
+*/
        ros::spinOnce();
        loop_rate.sleep();
     }

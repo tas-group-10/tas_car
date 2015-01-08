@@ -1,0 +1,51 @@
+import rospy
+from sensor_msgs import LaserScan
+from std_msgs.msg import Int32
+
+def scanCallback(scan.data):
+    //Computation of the index Values of scan.ranges that need to be checked for ostacles
+    int anzValues = int((round(fabs(scan->angle_min)+scan->angle_max)/scan->angle_increment));
+    int indexmin = (anzValues/2) - (AVOIDANGLE/2)/((scan->angle_increment/PI)*180);
+    int indexmax = (anzValues/2) + (AVOIDANGLE/2)/((scan->angle_increment/PI)*180);
+    int i =0;
+
+    double minvalue=100;
+    for (i=indexmin-1;i<=(indexmax-1);i++){
+
+        if(scan->ranges[i]<minvalue) minvalue=scan->ranges[i];
+
+    }
+    dspeed=1550+int(minvalue)*10;
+
+
+}
+
+    def talker():
+        pub = rospy.Publisher('chatter', String, queue_size=10)
+        rospy.init_node('talker', anonymous=True)
+        rate = rospy.Rate(10) # 10hz
+        while not rospy.is_shutdown():
+            hello_str = "hello world %s" % rospy.get_time()
+            rospy.loginfo(hello_str)
+            pub.publish(hello_str)
+            rate.sleep()
+    
+if __name__ == '__main__':
+
+    rospy.init_node('caspeedc', anonymous=True)
+    ros.NodeHandle n;
+
+    dspeed_publisher = rospy.Publisher('dynspeed', Int32, 1000)
+    rospy.Subscriber sub = n.subscribe("scan", Int32, scanCallback);
+
+    std_msgs::Int32 speed;
+    loop_rate== rospy.Rate(10)
+
+    while ros.ok():
+        dspeed_publisher.publish(dspeed);
+        ros.spinOnce();
+        loop_rate.sleep();
+    }
+
+    return 0;
+}
