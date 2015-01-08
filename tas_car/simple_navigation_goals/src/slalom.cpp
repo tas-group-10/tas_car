@@ -38,7 +38,6 @@ void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) {
     //ROS_INFO("[X]:%f [Y]:%f [W]: %f [Z]: %f", feedback->base_position.pose.position.x,feedback->base_position.pose.position.y,feedback->base_position.pose.orientation.w, feedback->base_position.pose.orientation.z);
 }
 
-
 /**
  * Main function
  */
@@ -50,13 +49,13 @@ int main(int argc, char** argv){
     geometry_msgs::Pose waypoint;
     double b = 2.2;
     double l = 1.5;
-    double initx = 23.72;
+    double initx = 23.5;
     double inity = 18.85;
 
     for (size_t i = 0; i < 20; i++){
 
         waypoint.position.x = initx + b/4.0*sin((double)i*3.0/8.0*PI/l);
-        waypoint.position.y = inity - 50.0 - (double)i*3.0/8.0;
+        waypoint.position.y = inity - 0.5 - (double)i*3.0/8.0;
         waypoint.position.z = 0;
         waypoint.orientation = tf::createQuaternionMsgFromYaw(b/4.0*3.0/8.0*PI/l*cos((double)i*3.0/8.0*PI/l)-PI/2.0);
         //listener.transformPose("map",waypoint,waypoint_new);
@@ -65,7 +64,7 @@ int main(int argc, char** argv){
         waypoints.push_back(waypoint);
     }
     for (size_t i = 0; i < 20; i++){
-        printf("Sending goal: x: %f, y: %f, z: %f\n", waypoints[i].position.x, waypoints[i].position.y, waypoints[i].position.z);
+        printf("Sending goal %d: x: %f, y: %f, z: %f\n",(int)i, waypoints[i].position.x, waypoints[i].position.y, waypoints[i].position.z);
         printf("Sending Or: x: %f, y: %f, z: %f, w: %f\n", waypoints[i].orientation.x, waypoints[i].orientation.y, waypoints[i].orientation.z, waypoints[i].orientation.w);
     }
 
@@ -83,9 +82,9 @@ int main(int argc, char** argv){
     for(int i = 0; i < waypoints.size(); ++i) { // loop over all goal points, point by point
         goal.target_pose.header.stamp = ros::Time::now(); // set current time
         goal.target_pose.pose = waypoints.at(i);
-        ROS_INFO("Sending goal: x: %f", goal.target_pose.pose.position.x);
-        ROS_INFO("Sending goal: y: %f", goal.target_pose.pose.position.y);
-        ROS_INFO("Sending goal: z: %f", goal.target_pose.pose.position.z);
+        ROS_INFO("Sending goal %d: x: %f",(int)i, goal.target_pose.pose.position.x);
+        ROS_INFO("Sending goal %d: y: %f",(int)i, goal.target_pose.pose.position.y);
+        ROS_INFO("Sending goal %d: z: %f",(int)i, goal.target_pose.pose.position.z);
         ac.sendGoal(goal, &doneCb, &activeCb, &feedbackCb); // send goal and register callback handler
         ac.waitForResult(); // wait for goal result
 
