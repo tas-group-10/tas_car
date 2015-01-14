@@ -11,13 +11,13 @@ isright = False
 
 def callback(scan):
     
-    scan_data = len(scan.ranges)
+    scan_data = np.array(scan.ranges)
     
-    step = 1
-    threshold = 0.3
+    step = 3
+    threshold = 1.1
     scan_size=len(scan_data)
 
-    diff_scan = scan_data[step:len(scan_data)]-scan[0:len(scan_data)-step];
+    diff_scan = scan_data[step:len(scan_data)]-scan_data[0:len(scan_data)-step];
     first_spike = []
     for i in xrange(0,len(diff_scan)):
         if(diff_scan[i] < -threshold):
@@ -29,8 +29,11 @@ def callback(scan):
     print(diff_scan[first_spike[0]])
     
     for i in xrange(0,len(first_spike)):
-        point = scan_data[first_spike[i]+step]
+        x = scan_data[first_spike[i]+step]
+	
         max_cone_size = int(math.floor(-20*x**3+80*x**2-x*120+90))
+	#max_cone_size = int(math.floor(-25*scan_data[first_spike[i]+step]+65))
+	print(max_cone_size)
         for j in xrange(first_spike[i],min(first_spike[i]+max_cone_size,len(diff_scan))):
             if(diff_scan[j] > threshold):
                 spike_pairs.append((first_spike[i], j, diff_scan[first_spike[i]]-diff_scan[j]))
