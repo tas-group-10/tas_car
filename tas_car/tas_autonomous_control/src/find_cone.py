@@ -29,7 +29,8 @@ def callback(scan):
     print(diff_scan[first_spike[0]])
     
     for i in xrange(0,len(first_spike)):
-        max_cone_size = int(math.floor(-25*scan_data[first_spike[i]+step]+55))
+        point = scan_data[first_spike[i]+step]
+        max_cone_size = int(math.floor(-20*x**3+80*x**2-x*120+90))
         for j in xrange(first_spike[i],min(first_spike[i]+max_cone_size,len(diff_scan))):
             if(diff_scan[j] > threshold):
                 spike_pairs.append((first_spike[i], j, diff_scan[first_spike[i]]-diff_scan[j]))
