@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::Subscriber sub=nh.subscribe("dynspeed",1000,rspeed_callback);
 
-    speed=1500;
+    speed=1550;
     ros::Rate loop_rate(50);
 
     while(ros::ok())

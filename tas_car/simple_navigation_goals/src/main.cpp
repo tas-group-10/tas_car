@@ -7,7 +7,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <move_base_msgs/MoveBaseActionResult.h>
 #include <actionlib/client/simple_action_client.h>
-
+#include "std_msgs/Int16.h"
 using namespace std;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -32,6 +32,7 @@ void activeCb() {
 void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) {
     ROS_INFO("[X]:%f [Y]:%f [W]: %f [Z]: %f", feedback->base_position.pose.position.x,feedback->base_position.pose.position.y,feedback->base_position.pose.orientation.w, feedback->base_position.pose.orientation.z);
 }
+
 
 /**
  * Main function
@@ -118,12 +119,11 @@ int main(int argc, char** argv){
     while (!ac.waitForServer(ros::Duration(5.0))) { // wait for the action server to come up
         ROS_INFO("Waiting for the move_base action server to come up");
     }
-
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map"; // set target pose frame of coordinates
     //goal.target_pose.header.frame_id = "base_link";
 
-    for(int i = 0; i < waypoints.size(); ++i) { // loop over all goal points, point by point
+    for(int i = 0; i < (waypoints.size()); ++i) { // loop over all goal points, point by point
         goal.target_pose.header.stamp = ros::Time::now(); // set current time
         goal.target_pose.pose = waypoints.at(i);
         ROS_INFO("Sending goal");

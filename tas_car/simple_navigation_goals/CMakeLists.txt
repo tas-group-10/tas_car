@@ -106,6 +106,7 @@ include_directories(
 ## Declare a cpp executable
 add_executable(simple_navigation_goals_node src/main.cpp)
 add_executable(send_start src/init_pose.cpp)
+add_executable(slalom_start src/init_pose_s.cpp)
 add_executable(slalom src/slalom.cpp)
 
 
@@ -118,6 +119,10 @@ target_link_libraries(simple_navigation_goals_node
   ${catkin_LIBRARIES}
 )
 target_link_libraries(send_start
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(slalom_start
   ${catkin_LIBRARIES}
 )
 
