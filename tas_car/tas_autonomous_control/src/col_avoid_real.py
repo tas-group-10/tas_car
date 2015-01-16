@@ -8,24 +8,43 @@ from sensor_msgs.msg import LaserScan
 
 dspeed = 0
 
+avoid_dist = 0.8
+car_width = 0.22
 def callback(scan):
+    startidx = int(round(np.arctan(avoid_dist/car_width)*720/np.pi))
     checkscans = np.array(scan.ranges)
-    checkscans = checkscans[250:470]
-    min_element = min(checkscans)
-    mean_val = -1
-    if min_element < 0.5:
-        npscan = np.array(checkscans)
-        l = len(npscan[npscan==min_element])
-        ids = np.argsort(npscan)
-        mean_val = round(np.mean(ids[0:l]))
 
-    if mean_val != -1:
-        if mean_val > 125:
-            aspeed = 1000
+    idx_fi = range(0,startidx)
+    idx_se = range(startidx,360)
+    idx_th = range(360,720-startidx)
+    idx_fo = range(720-startidx,720)
+
+    first = checkscans[idx_fi]
+    second = checkscans[idx_se]
+    third = checkscans[idx_th]
+    fourth = checkscans[idx_fo]
+
+
+    d_fi = [first[i] - car_width*np.cos(idx_fi[i]/(720/np.pi)) for i in range(len(first))]
+    d_se = [x-avoid_dist for x in second]
+    d_th = [x-avoid_dist for x in third]
+    d_fo = [fourth[i] - car_width*np.cos((720-idx_fo[i])/(720/np.pi)) for i in range(len(first))]
+
+    min_list = [min(d_fi), min(d_se), min(d_th), min(d_fo)]
+    min_id = np.argmin(min_list)
+
+    sector = -1
+    if min_list[min_id] < 0:
+        sector = min_id
+    #print d_fi
+    if sector != -1:
+        if min_id == 0 or min_id == 1:
+            aspeed = 2000
         else:
-            aspeed = 2000  
+            aspeed = 1000  
     else:
         aspeed = -1
+
     pub = rospy.Publisher('angspeed', Int32, queue_size=1000)
     rate = rospy.Rate(10) # 10hz
     angspeed = Int32()

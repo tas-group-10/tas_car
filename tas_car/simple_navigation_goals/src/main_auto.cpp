@@ -7,7 +7,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <move_base_msgs/MoveBaseActionResult.h>
 #include <actionlib/client/simple_action_client.h>
-#include "std_msgs/UInt16.h"
+#include "std_msgs/Int32.h"
 
 using namespace std;
 
@@ -36,7 +36,7 @@ void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) {
     ROS_INFO("[X]:%f [Y]:%f [W]: %f [Z]: %f", feedback->base_position.pose.position.x,feedback->base_position.pose.position.y,feedback->base_position.pose.orientation.w, feedback->base_position.pose.orientation.z);
 }
 //Gest Init Position
-void Get_Init_Pos(const std_msgs::UInt16::ConstPtr& msg)
+void Get_Init_Pos(const std_msgs::Int32::ConstPtr& msg)
 {
   get_Pos=msg->data;
 }
@@ -45,12 +45,16 @@ void Get_Init_Pos(const std_msgs::UInt16::ConstPtr& msg)
  * Main function
  */
 int main(int argc, char** argv){
-    ros::init(argc, argv, "simple_navigation_goals"); // init and set name
+    ros::init(argc, argv, "goals_automatic"); // init and set name
     std::vector<geometry_msgs::Pose> waypoints; // vector of goals, with position and orientation
 
     ros::NodeHandle n;
     ros::Subscriber init_sub = n.subscribe("init_Position", 50, Get_Init_Pos);
 
+    while(!get_Pos)
+    {
+        ros::spinOnce();
+    }
     //Set first Goalpoint
     geometry_msgs::Pose waypoint1;
     waypoint1.position.x = 10.27;//22.0;
@@ -133,9 +137,9 @@ int main(int argc, char** argv){
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map"; // set target pose frame of coordinates
     //goal.target_pose.header.frame_id = "base_link";
-    ros::spinOnce();
+
     int bias[2] = {0,6};
-    if(get_Pos != 0)
+    if(get_Pos == 1 || get_Pos == 2)
     {
         for(int i = 0; i < waypoints.size(); ++i) { // loop over all goal points, point by point
             goal.target_pose.header.stamp = ros::Time::now(); // set current time

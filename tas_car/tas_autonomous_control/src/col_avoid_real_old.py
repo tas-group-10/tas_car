@@ -9,27 +9,28 @@ from sensor_msgs.msg import LaserScan
 dspeed = 0
 
 def callback(scan):
-    global dspeed
-    alpha = 30
-    n=10
+    checkscans = np.array(scan.ranges)
+    checkscans = checkscans[250:470]
+    min_element = min(checkscans)
+    mean_val = -1
+    if min_element < 0.5:
+        npscan = np.array(checkscans)
+        l = len(npscan[npscan==min_element])
+        ids = np.argsort(npscan)
+        mean_val = round(np.mean(ids[0:l]))
 
-    nVal = len(scan.ranges)
-    v_min = (90-alpha)/0.25
-    v_max = (90+alpha)/0.25
-    tmp_arr = np.array(scan.ranges[int(v_min):int(v_max)])
-    idx_arr = tmp_arr.argsort()[:n]
-    med = np.median(tmp_arr[idx_arr])
-    
-    dspeed=1530+med*20
-    if dspeed > 1600:
-        dspeed = 1600
-    if med < 0.4:
-        dspeed=1500
-    pub = rospy.Publisher('dynspeed', Int32, queue_size=1000)
+    if mean_val != -1:
+        if mean_val > 125:
+            aspeed = 1000
+        else:
+            aspeed = 2000  
+    else:
+        aspeed = -1
+    pub = rospy.Publisher('angspeed', Int32, queue_size=1000)
     rate = rospy.Rate(10) # 10hz
-    speed = Int32()
-    speed.data = dspeed
-    pub.publish(speed)
+    angspeed = Int32()
+    angspeed.data = aspeed
+    pub.publish(angspeed)
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same

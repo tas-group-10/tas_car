@@ -4,7 +4,7 @@
 #include <move_base_msgs/MoveBaseActionResult.h>
 #include <actionlib/client/simple_action_client.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include "std_msgs/UInt16.h"
+#include "std_msgs/Int32.h"
 
 //Declarations for wlan sensitivity
 #include <stdio.h>
@@ -19,18 +19,19 @@ int find_init_pos();
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "send_start");
+    ros::init(argc, argv, "send_start_wlan");
 
     ros::NodeHandle n;
     ros::Publisher start = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose",50);
-    ros::Publisher init_pub = n.advertise<std_msgs::UInt16("init_Position", 50);
+    ros::Publisher init_pub = n.advertise<std_msgs::Int32>("init_Position", 50);
     // Startpoint position.x = 11
     // Startpoint position.y = 19
-    int pos = find_init_pos();
+    std_msgs::Int32 pos;
+    pos.data = find_init_pos();
     init_pub.publish(pos);
-    if(pos == 1)
+    geometry_msgs::PoseWithCovarianceStamped init;
+    if(pos.data == 1)
     {
-        geometry_msgs::PoseWithCovarianceStamped init;
         init.pose.pose.position.x = 11.0;
         init.pose.pose.position.y = 19.0;
         init.pose.pose.position.z = 0.0;
@@ -42,19 +43,18 @@ int main(int argc, char **argv)
         init.pose.covariance[7] = 0.25;
         init.pose.covariance[35] = 0.069;
     }
-    else if(pos == 2)
-    {
-        geometry_msgs::PoseWithCovarianceStamped init;
-        init.pose.pose.position.x = 11.0;
-        init.pose.pose.position.y = 19.0;
+    else if(pos.data == 2)
+    {        
+        init.pose.pose.position.x = 23.94;
+        init.pose.pose.position.y = 19.0677;
         init.pose.pose.position.z = 0.0;
         init.pose.pose.orientation.x = 0.0;
         init.pose.pose.orientation.y = 0.0;
-        init.pose.pose.orientation.z = -0.72;
-        init.pose.pose.orientation.w = 0.69;
+        init.pose.pose.orientation.z = 0.99974;
+        init.pose.pose.orientation.w = 0.022479;
         init.pose.covariance[0] = 0.25;
         init.pose.covariance[7] = 0.25;
-        init.pose.covariance[35] = 0.069;
+        init.pose.covariance[35] = 0.068538;
     }
     else
     {
@@ -177,11 +177,20 @@ int find_init_pos()
                 }
             }
             if((pos_level[0] > pos_level[1]) || (pos_level[2] > pos_level[1]))
+            {
+                cout << "Position 1" << endl;
                 value_return = 1;
+            }
             else if((pos_level[1] > pos_level[0]) || (pos_level[1] > pos_level[2]))
+            {
+                cout << "Position 2" << endl;
                 value_return = 2;
+            }
             else
+            {
+                cout << "No Position" << endl;
                 value_return = 0;
+            }
         }
         int status = pclose(fp);
         if (status == -1)

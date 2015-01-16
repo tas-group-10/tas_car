@@ -1,8 +1,17 @@
+#define MINDISTGOAL 2.0
+
 #include "control/control.h"
 #include "std_msgs/Int32.h"
-
+#include "move_base_msgs/MoveBaseActionGoal.h"
+#include "geometry_msgs/PoseWithCovarianceStamped.h"
+#include "math.h"
 int speed;
 int angspeed;
+int cone_pos;
+double goal[2];
+double pose[2];
+
+double cal_dist(double* goal, double* pose);
 
 void rspeed_callback(const std_msgs::Int32::ConstPtr& msg){
 
@@ -18,6 +27,29 @@ void angspeed_callback(const std_msgs::Int32::ConstPtr& msg){
 
 }
 
+void cpspeed_callback(const std_msgs::Int32::ConstPtr& msg){
+
+
+    cone_pos=msg->data;
+
+}
+void getgoal_callback(const move_base_msgs::MoveBaseActionGoal::ConstPtr& msg){
+
+
+    goal[0]=double (msg->goal.target_pose.pose.position.x);
+    goal[1]=double (msg->goal.target_pose.pose.position.y);
+
+
+}
+void pose_callback (const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg){
+
+    pose[0]=double (msg->pose.pose.position.x);
+    pose[1]=double (msg->pose.pose.position.y);
+
+
+
+}
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "autonomous_control");
@@ -26,7 +58,12 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::Subscriber sub=nh.subscribe("dynspeed",1000,rspeed_callback);
     ros::Subscriber sub1=nh.subscribe("angspeed",1000,angspeed_callback);
+    ros::Subscriber sub2=nh.subscribe("cone_position",1000,cpspeed_callback);
+    ros::Subscriber sub3=nh.subscribe("amcl_pose",1000,pose_callback);
+    ros::Subscriber sub4=nh.subscribe("move_base/goal",1000,getgoal_callback);
+
     angspeed = -1;
+    cone_pos = -1;
     speed=1550;
     ros::Rate loop_rate(50);
     bool infoflag = false;
@@ -50,49 +87,83 @@ int main(int argc, char** argv)
             }
             else
             {
-                if (infoflag2==false)
+                if(0)
                 {
-                    ROS_INFO("Automatic Control!");
-                    infoflag2=true;
-                }
-
-                if(autonomous_control.cmd_linearVelocity>0)
-                {
-                    autonomous_control.control_servo.x = speed;
-                }
-                else if(autonomous_control.cmd_linearVelocity<0)
-                {
-
-                    autonomous_control.control_servo.x = 1450;
+                    autonomous_control.control_servo.x = 1550;
+                    if(cone_pos == 0 || cone_pos == 4)
+                        autonomous_control.control_servo.y = 1000;
+                    else if(cone_pos == 1 || cone_pos == 3)
+                        autonomous_control.control_servo.y = 1500;
+                    else if(cone_pos == 2)
+                        autonomous_control.control_servo.y = 2000;
                 }
                 else
                 {
-                    autonomous_control.control_servo.x = 1500;
-                }
-
-
-                ROS_INFO("normal");
-
-                if(angspeed != -1)
-                {
-                    autonomous_control.control_servo.y = angspeed;
-                }
-                else
-                {
-                    if(speed > 1550 && autonomous_control.cmd_steeringAngle > 1700)
+                    if (infoflag2==false)
                     {
-
-                        autonomous_control.control_servo.y = 1600;
-                        ROS_INFO("Grenze 1600");
+                        ROS_INFO("Automatic Control!");
+                        infoflag2=true;
                     }
-                    else if(speed > 1550 && autonomous_control.cmd_steeringAngle < 1300)
+
+                    if(autonomous_control.cmd_linearVelocity>0)
                     {
-                        autonomous_control.control_servo.y = 1400;
-                        ROS_INFO("Grenze 1400");
+                        if (cal_dist(goal,pose) > MINDISTGOAL){
+                            ROS_INFO("dynspeed");
+                            autonomous_control.control_servo.x = speed;
+                            if (speed == 1500){
+                                autonomous_control.control_servo.x = 1500;
+                            ROS_INFO("emergency brake");
+                            }
+
+                        }
+                        else {
+
+                            autonomous_control.control_servo.x = 1550;
+                            ROS_INFO("langsam");
+
+                        }
+                    }
+                    else if(autonomous_control.cmd_linearVelocity<0)
+                    {
+
+                        autonomous_control.control_servo.x = 1450;
                     }
                     else
                     {
-                        autonomous_control.control_servo.y = autonomous_control.cmd_steeringAngle;
+                        autonomous_control.control_servo.x = 1500;
+                    }
+
+
+                    ROS_INFO("normal");
+
+                    if(angspeed != -1)
+                    {
+                        autonomous_control.control_servo.y = angspeed;
+                    }
+                    else
+                    {
+                        if (cal_dist(goal,pose) > MINDISTGOAL)
+                        {
+                            if(speed > 1550 && autonomous_control.cmd_steeringAngle > 1700)
+                            {
+
+                                autonomous_control.control_servo.y = 1650;
+                                ROS_INFO("Grenze 1600");
+                            }
+                            else if(speed > 1550 && autonomous_control.cmd_steeringAngle < 1300)
+                            {
+                                autonomous_control.control_servo.y = 1350;
+                                ROS_INFO("Grenze 1400");
+                            }
+                            else
+                            {
+                                autonomous_control.control_servo.y = autonomous_control.cmd_steeringAngle;
+                            }
+                        }
+                        else
+                        {
+                            autonomous_control.control_servo.y = autonomous_control.cmd_steeringAngle;
+                        }
                     }
                 }
             }
@@ -107,5 +178,13 @@ int main(int argc, char** argv)
     }
 
     return 0;
+
+}
+
+double cal_dist(double* goal, double* pose){
+
+
+return sqrt((goal[0]-pose[0])*(goal[0]-pose[0])+(goal[1]-pose[1])*(goal[1]-pose[1]));
+
 
 }
