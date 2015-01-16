@@ -9,7 +9,7 @@ from sensor_msgs.msg import LaserScan
 dspeed = 0
 
 avoid_dist = 0.8
-car_width = 0.22
+car_width = 0.30
 def callback(scan):
     startidx = int(round(np.arctan(avoid_dist/car_width)*720/np.pi))
     checkscans = np.array(scan.ranges)

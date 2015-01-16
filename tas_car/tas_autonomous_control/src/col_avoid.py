@@ -20,7 +20,7 @@ def callback(scan):
     idx_arr = tmp_arr.argsort()[:n]
     med = np.median(tmp_arr[idx_arr])
     
-    dspeed=1530+med*20
+    dspeed=1535+med*20
     if dspeed > 1600:
         dspeed = 1600
     if med < 0.4:

@@ -87,14 +87,14 @@ int main(int argc, char** argv)
             }
             else
             {
-                if(0)
+                if(1)
                 {
                     autonomous_control.control_servo.x = 1550;
-                    if(cone_pos == 0 || cone_pos == 4)
+                    if(cone_pos == 0)
                         autonomous_control.control_servo.y = 1000;
-                    else if(cone_pos == 1 || cone_pos == 3)
+                    else if(cone_pos == -1)
                         autonomous_control.control_servo.y = 1500;
-                    else if(cone_pos == 2)
+                    else if(cone_pos == 1)
                         autonomous_control.control_servo.y = 2000;
                 }
                 else
@@ -110,17 +110,17 @@ int main(int argc, char** argv)
                         if (cal_dist(goal,pose) > MINDISTGOAL){
                             ROS_INFO("dynspeed");
                             autonomous_control.control_servo.x = speed;
-                            if (speed == 1500){
-                                autonomous_control.control_servo.x = 1500;
-                            ROS_INFO("emergency brake");
                             }
 
-                        }
                         else {
 
                             autonomous_control.control_servo.x = 1550;
-                            ROS_INFO("langsam");
 
+                            if (speed == 1500){
+                                autonomous_control.control_servo.x = 1500;
+                                ROS_INFO("emergency brake");
+
+                            }
                         }
                     }
                     else if(autonomous_control.cmd_linearVelocity<0)
@@ -134,7 +134,6 @@ int main(int argc, char** argv)
                     }
 
 
-                    ROS_INFO("normal");
 
                     if(angspeed != -1)
                     {
