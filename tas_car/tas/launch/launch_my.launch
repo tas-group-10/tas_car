@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node name="col_avoid" pkg="col_avoid" type="col_avoid.py">
+</launch>

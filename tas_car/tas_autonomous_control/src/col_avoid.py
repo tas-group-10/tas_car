@@ -8,28 +8,48 @@ from sensor_msgs.msg import LaserScan
 
 dspeed = 0
 
+avoid_dist = 0.8
+car_width = 0.30
 def callback(scan):
-    global dspeed
-    alpha = 30
-    n=10
+    startidx = int(round(np.arctan(avoid_dist/car_width)*720/np.pi))
+    checkscans = np.array(scan.ranges)
 
-    nVal = len(scan.ranges)
-    v_min = (90-alpha)/0.25
-    v_max = (90+alpha)/0.25
-    tmp_arr = np.array(scan.ranges[int(v_min):int(v_max)])
-    idx_arr = tmp_arr.argsort()[:n]
-    med = np.median(tmp_arr[idx_arr])
-    
-    dspeed=1530+med*20
-    if dspeed > 1600:
-        dspeed = 1600
-    if med < 0.4:
-        dspeed=1500
-    pub = rospy.Publisher('dynspeed', Int32, queue_size=1000)
+    idx_fi = range(0,startidx)
+    idx_se = range(startidx,360)
+    idx_th = range(360,720-startidx)
+    idx_fo = range(720-startidx,720)
+
+    first = checkscans[idx_fi]
+    second = checkscans[idx_se]
+    third = checkscans[idx_th]
+    fourth = checkscans[idx_fo]
+
+
+    d_fi = [first[i] - car_width*np.cos(idx_fi[i]/(720/np.pi)) for i in range(len(first))]
+    d_se = [x-avoid_dist for x in second]
+    d_th = [x-avoid_dist for x in third]
+    d_fo = [fourth[i] - car_width*np.cos((720-idx_fo[i])/(720/np.pi)) for i in range(len(first))]
+
+    min_list = [min(d_fi), min(d_se), min(d_th), min(d_fo)]
+    min_id = np.argmin(min_list)
+
+    sector = -1
+    if min_list[min_id] < 0:
+        sector = min_id
+    #print d_fi
+    if sector != -1:
+        if min_id == 0 or min_id == 1:
+            aspeed = 2000
+        else:
+            aspeed = 1000  
+    else:
+        aspeed = -1
+
+    pub = rospy.Publisher('angspeed', Int32, queue_size=1000)
     rate = rospy.Rate(10) # 10hz
-    speed = Int32()
-    speed.data = dspeed
-    pub.publish(speed)
+    angspeed = Int32()
+    angspeed.data = aspeed
+    pub.publish(angspeed)
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
