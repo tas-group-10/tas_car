@@ -128,7 +128,6 @@ int main(int argc, char** argv){
 
     if(std::string(argv[1]) == "2"){ //[0]...rosrun, [1]...simple, [2]simple,  [3]...s
         bias = 6;
-        ROS_INFO("TestTest2");
     }
 
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
