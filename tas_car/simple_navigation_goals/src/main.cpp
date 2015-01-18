@@ -75,7 +75,6 @@ int main(int argc, char** argv){
     waypoints.push_back(waypoint3);
     //Before the small door, Laith office
     geometry_msgs::Pose waypoint4;
-<<<<<<< HEAD
     waypoint4.position.x = 22.95397;
     waypoint4.position.y = 6.28584;
     waypoint4.position.z = 0.000;
