@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int get_Pos;
+int get_Pos; // global variable for the initial position
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
@@ -35,7 +35,7 @@ void activeCb() {
 void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) {
     ROS_INFO("[X]:%f [Y]:%f [W]: %f [Z]: %f", feedback->base_position.pose.position.x,feedback->base_position.pose.position.y,feedback->base_position.pose.orientation.w, feedback->base_position.pose.orientation.z);
 }
-//Gest Init Position
+// subscriber function to get the initial position
 void Get_Init_Pos(const std_msgs::Int32::ConstPtr& msg)
 {
   get_Pos=msg->data;
@@ -49,6 +49,7 @@ int main(int argc, char** argv){
     std::vector<geometry_msgs::Pose> waypoints; // vector of goals, with position and orientation
 
     ros::NodeHandle n;
+    // subscribe the initial position
     ros::Subscriber init_sub = n.subscribe("init_Position", 50, Get_Init_Pos);
 
     while(!get_Pos)
@@ -138,12 +139,12 @@ int main(int argc, char** argv){
     goal.target_pose.header.frame_id = "map"; // set target pose frame of coordinates
     //goal.target_pose.header.frame_id = "base_link";
 
-    int bias[2] = {0,6};
+    int bias[2] = {0,6};    // the bias to start with a different goal depending on the initial position
     if(get_Pos == 1 || get_Pos == 2)
     {
         for(int i = 0; i < waypoints.size(); ++i) { // loop over all goal points, point by point
             goal.target_pose.header.stamp = ros::Time::now(); // set current time
-            goal.target_pose.pose = waypoints.at((i+bias[get_Pos-1])%7);
+            goal.target_pose.pose = waypoints.at((i+bias[get_Pos-1])%7);    // set the correct goal
             ROS_INFO("Sending goal");
             ac.sendGoal(goal, &doneCb, &activeCb, &feedbackCb); // send goal and register callback handler
             ac.waitForResult(); // wait for goal result
