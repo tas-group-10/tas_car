@@ -124,16 +124,6 @@ int main(int argc, char** argv){
     waypoint8.orientation.w = 0.00116;
     waypoints.push_back(waypoint8);
 
-    geometry_msgs::Pose waypoint8;
-    waypoint7.position.x = 13.512;
-    waypoint7.position.y = 19.72325;
-    waypoint7.position.z = 0.000;
-    waypoint7.orientation.x = 0.0;
-    waypoint7.orientation.y = 0.0;
-    waypoint7.orientation.z = -1;
-    waypoint7.orientation.w = 0.00116;
-    waypoints.push_back(waypoint8);
-
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
 
     while (!ac.waitForServer(ros::Duration(5.0))) { // wait for the action server to come up
@@ -142,6 +132,12 @@ int main(int argc, char** argv){
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map"; // set target pose frame of coordinates
     //goal.target_pose.header.frame_id = "base_link";
+
+
+    //int bias = 0;
+    //if(std::string(argv[3]) == "2"){ //[0]...rosrun, [1]...simple, [2]simple,  [3]...s
+        //bias = 6;
+    //}
 
     int bias = 6; //Start Position2
     //for(int i = 0; i < (waypoints.size()); ++i) { // loop over all goal points, point by point

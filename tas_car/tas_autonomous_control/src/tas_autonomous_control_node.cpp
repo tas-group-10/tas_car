@@ -39,14 +39,11 @@ void getgoal_callback(const move_base_msgs::MoveBaseActionGoal::ConstPtr& msg){
     goal[0]=double (msg->goal.target_pose.pose.position.x);
     goal[1]=double (msg->goal.target_pose.pose.position.y);
 
-
 }
 void pose_callback (const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg){
 
     pose[0]=double (msg->pose.pose.position.x);
     pose[1]=double (msg->pose.pose.position.y);
-
-
 
 }
 
@@ -87,7 +84,8 @@ int main(int argc, char** argv)
             }
             else
             {
-                if(1)
+                //if(std::string(argv[2]) == "s"){ //[0]...roslaunch, [1]...run_system.launch, [2]...s
+                if(0)
                 {
                     autonomous_control.control_servo.x = 1550;
                     if(cone_pos == 0)
