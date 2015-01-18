@@ -1,28 +1,42 @@
 #!/usr/bin/env python
 # license removed for brevity
+
+"""
+dynamical adjustment of the car speed
+subscriber: /scan (type LaserScan
+publisher: /dynspeed (type Int32) 
+"""
+
 import rospy
 import numpy as np
-from std_msgs.msg import Int32
-from operator import itemgetter
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Int32
+
 
 dspeed = 0
 
 def callback(scan):
     global dspeed
-    alpha = 30
-    n=10
 
+    # angle from the middle of the car to the left or right.
+    # obstacles outside this are ignored
+    alpha = 30
+    n=10  # number of minimal values from laserscan
+    #calculate the number of the lowest and highest index of the area defined by alpha
     nVal = len(scan.ranges)
     v_min = (90-alpha)/0.25
     v_max = (90+alpha)/0.25
     tmp_arr = np.array(scan.ranges[int(v_min):int(v_max)])
+    #get the indexes of the n points with the lowest distance
     idx_arr = tmp_arr.argsort()[:n]
+    #we calculate the median because it is independent of noise
     med = np.median(tmp_arr[idx_arr])
     
-    dspeed=1535+med*20
+    dspeed=1535+med*20  #calculate the new speed value
+    #set a maxium speed of 1600
     if dspeed > 1600:
         dspeed = 1600
+    #if the distance is lower than 0.3 we have to stop
     if med < 0.3:
         dspeed=1500
     print med 
