@@ -124,6 +124,13 @@ int main(int argc, char** argv){
     waypoint8.orientation.w = 0.00116;
     waypoints.push_back(waypoint8);
 
+    int bias=0;
+
+    if(std::string(argv[1]) == "2"){ //[0]...rosrun, [1]...simple, [2]simple,  [3]...s
+        bias = 6;
+        ROS_INFO("TestTest2");
+    }
+
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
 
     while (!ac.waitForServer(ros::Duration(5.0))) { // wait for the action server to come up
@@ -134,12 +141,9 @@ int main(int argc, char** argv){
     //goal.target_pose.header.frame_id = "base_link";
 
 
-    //int bias = 0;
-    //if(std::string(argv[3]) == "2"){ //[0]...rosrun, [1]...simple, [2]simple,  [3]...s
-        //bias = 6;
-    //}
 
-    int bias = 6; //Start Position2
+
+    //int bias = 6; //Start Position2
     //for(int i = 0; i < (waypoints.size()); ++i) { // loop over all goal points, point by point
     for(int i = 0;; ++i) { // loop over all goal points, point by point
         goal.target_pose.header.stamp = ros::Time::now(); // set current time

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+	
+
+	<!-- activate collision avoidance -->
+	<node name="col_avoid" pkg="tas_autonomous_control" type="col_avoid.py" output="screen"/>
+	<!-- activate speed_adjust -->
+	<node name="speed_adjust" pkg="tas_autonomous_control" type="speed_adjust.py" output="screen"/>
+	<!-- activate node to update the goal position -->
+	<node name="simple_navigation_goals_node" pkg="simple_navigation_goals" type="simple_navigation_goals_node" args="2" output="screen"/>
+	
+	<!-- activate node to send initial position -->
+	<node name="send_start" pkg="simple_navigation_goals" type="send_start" output="screen" />
+
+	<!-- start laser-merge optional -->
+	<!-- <include file="/home/tas_group_10/catkin_ws/src/ira_laser_tools-master/launch/	laserscan_multi_merger.launch" /> -->
+
+
+
+</launch>

@@ -13,7 +13,6 @@ def callback(scan):
     
     scan_data = np.array(scan.ranges)
     
-    switch_dist = 1.1
     step = 2
     threshold = 1.1
     scan_size=len(scan_data)
@@ -46,45 +45,29 @@ def callback(scan):
     if len(sorted_spikes) != 0:
         spike_pos = (sorted_spikes[0][0]+sorted_spikes[0][1])/2
     print spike_pos
-    my_spike_pos = -1;
+    my_spike_pose = -1;
     if spike_pos > 4*144:
-        my_spike_pos = 4
-        print '4th'
+        my_spike_pose = 4
+        print '5th'
     elif spike_pos > 3*144:
-        my_spike_pos = 3
-        print '3th'
+        my_spike_pose = 3
+        print '4th'
     elif spike_pos > 2*144:
-        my_spike_pos = 2
-        print '2th'
+        print 'oasch'
+        my_spike_pose = 2
+        print '3th'
     elif spike_pos > 1*144:
-        my_spike_pos = 1
-        print '1th'
+        my_spike_pose = 1
+        print '2th'
     elif spike_pos > 1:
         my_spike_pose = 0
-        print '0th'
+        print '1th'
     else:
         print 'no_cone_found'
-    vc2 = 1
-    min_val = scan_data[my_spike_pos]
-    print min_val
-    if my_spike_pos == 2:
-        vel_cmd = vc2;
-    elif (my_spike_pos == 3 or my_spike_pos == 4) and min_val <= switch_dist:
-        vel_cmd = -1
-    elif (my_spike_pos == 3 or my_spike_pos == 4) and min_val > switch_dist:
-        vel_cmd = 1
-        vc2 = 1
-    elif (my_spike_pos == 0 or my_spike_pos == 1) and min_val <= switch_dist:
-        vel_cmd = -1
-    elif (my_spike_pos == 0 or my_spike_pos == 1) and min_val > switch_dist:
-        vel_cmd = 0
-        vc2 = 0
-    else:
-        vel_cmd = -4
     
     pub = rospy.Publisher('cone_position', Int32, queue_size=1000)
     sector = Int32()
-    sector.data = vel_cmd
+    sector.data = my_spike_pose
     pub.publish(sector)
 
 def listener():

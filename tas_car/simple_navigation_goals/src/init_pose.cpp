@@ -14,18 +14,21 @@ int main(int argc, char **argv)
     // Startpoint position.x = 11
     // Startpoint position.y = 19
     geometry_msgs::PoseWithCovarianceStamped init;
-    //if(std::string(argv[3]) == "1"){ //[0]...rosrun, [1]...simple_, [2]...send_start, [3]...1 or 2
-//    init.pose.pose.position.x = 11.0;
-//    init.pose.pose.position.y = 19.0;
-//    init.pose.pose.position.z = 0.0;
-//    init.pose.pose.orientation.x = 0.0;
-//    init.pose.pose.orientation.y = 0.0;
-//    init.pose.pose.orientation.z = -0.72;
-//    init.pose.pose.orientation.w = 0.69;
-//    init.pose.covariance[0] = 0.25;
-//    init.pose.covariance[7] = 0.25;
-//    init.pose.covariance[35] = 0.069;
-      //}else{
+    if(std::string(argv[1]) == "1"){ //[0]...rosrun, [1]...simple_, [2]...send_start, [3]...1 or 2
+    init.pose.pose.position.x = 11.0;
+    init.pose.pose.position.y = 19.0;
+    init.pose.pose.position.z = 0.0;
+    init.pose.pose.orientation.x = 0.0;
+    init.pose.pose.orientation.y = 0.0;
+    init.pose.pose.orientation.z = -0.72;
+    init.pose.pose.orientation.w = 0.69;
+    init.pose.covariance[0] = 0.25;
+    init.pose.covariance[7] = 0.25;
+    init.pose.covariance[35] = 0.069;
+    }
+    else{
+    ROS_INFO("Starting Pos2");
+
     init.pose.pose.position.x = 23.94;
     init.pose.pose.position.y = 19.0677;
     init.pose.pose.position.z = 0.0;
@@ -36,7 +39,7 @@ int main(int argc, char **argv)
     init.pose.covariance[0] = 0.25;
     init.pose.covariance[7] = 0.25;
     init.pose.covariance[35] = 0.068538;
-    //}
+    }
     ros::Rate poll_rate(100);
     while(start.getNumSubscribers() == 0)
     {

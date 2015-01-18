@@ -106,7 +106,7 @@ include_directories(
 
 ## Declare a cpp executable
 add_executable(tas_autonomous_control_node src/tas_autonomous_control_node.cpp src/control/control.cpp)
-add_executable(odom_pub src/odom_pub.cpp)
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(tas_autonomous_control_node tas_autonomous_control_generate_messages_cpp)
@@ -115,9 +115,6 @@ add_executable(odom_pub src/odom_pub.cpp)
 target_link_libraries(tas_autonomous_control_node
   ${catkin_LIBRARIES}
 )
-target_link_libraries(odom_pub
-  ${catkin_LIBRARIES}
-)	
 #############
 ## Install ##
 #############

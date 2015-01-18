@@ -84,8 +84,8 @@ int main(int argc, char** argv)
             }
             else
             {
-                //if(std::string(argv[2]) == "s"){ //[0]...roslaunch, [1]...run_system.launch, [2]...s
-                if(0)
+                if(std::string(argv[1]) == "s")
+
                 {
                     autonomous_control.control_servo.x = 1550;
                     if(cone_pos == 0)
