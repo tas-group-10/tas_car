@@ -15,7 +15,7 @@
 using std::cout;
 using std::endl;
 
-int find_init_pos();
+int find_init_pos(); //Prototype to find the position over Wifi
 
 int main(int argc, char **argv)
 {
@@ -23,13 +23,15 @@ int main(int argc, char **argv)
 
     ros::NodeHandle n;
     ros::Publisher start = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose",50);
+    //Publisher to main.cpp to set the goals appropriate
     ros::Publisher init_pub = n.advertise<std_msgs::Int32>("init_Position", 50);
     // Startpoint position.x = 11
     // Startpoint position.y = 19
     std_msgs::Int32 pos;
-    pos.data = find_init_pos();
-    init_pub.publish(pos);
+    pos.data = find_init_pos(); //Call function to find the initial Position
+    init_pub.publish(pos);  //Publish 
     geometry_msgs::PoseWithCovarianceStamped init;
+    // Set start Position 1
     if(pos.data == 1)
     {
         init.pose.pose.position.x = 11.0;
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
         init.pose.covariance[7] = 0.25;
         init.pose.covariance[35] = 0.069;
     }
+    // Set start Position 2
     else if(pos.data == 2)
     {        
         init.pose.pose.position.x = 23.94;
@@ -80,13 +83,14 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
+// Function to find the initial position over Wifi
 int find_init_pos()
 {
     FILE *fp;
     int value_return = 0;
+    // execute the linux command "iwlist wlan1 scan" to get all access points refer it to the File Pointer
     fp = popen("iwlist wlan1 scan", "r");
-    //fp = fopen("iwlist.txt", "r");
+    // if the file pointer is zero
     if (fp == NULL)
     {
         cout << "Handle error" << endl;
@@ -94,57 +98,54 @@ int find_init_pos()
     }
     else
     {
-        char *ptr;
-        char path[512] = {0};
-        char Addr[3][30] = {0};
-        char id[20] = {0};
-        char level[3][10] = {0};
-        unsigned int wlan_count = 0;
-        while(fgets(path, 512, fp) != NULL)
+        char *ptr;  // Pointer for the search string
+        char path[512] = {0};   // path for every line
+        char Addr[3][30] = {0}; // 2D array for three access points in the TAS_NET
+        char id[20] = {0};  // array for the name (TAS_NET)
+        char level[3][10] = {0};    // 2D array for three signal level
+        unsigned int wlan_count = 0;    // counter for the three access points
+        while(fgets(path, 512, fp) != NULL) // get every line
         {
-            //cout << path << endl;
-            ptr = strstr(path,"Address: ");
-            if(ptr != NULL)
+            ptr = strstr(path,"Address: "); // search the line for Address
+            if(ptr != NULL) // Address found
             {
-                strncpy(Addr[wlan_count],ptr+strlen("Address: "),17);
-                //cout << Addr[0] << endl;
-                fgets(path, 512, fp);
-                ptr = strstr(path,"ESSID:");
-                if(ptr != NULL)
+                strncpy(Addr[wlan_count],ptr+strlen("Address: "),17);   // copy the address into the array at the current position
+                fgets(path, 512, fp);   // get the next line
+                ptr = strstr(path,"ESSID:");    // serach for line with the ID
+                if(ptr != NULL) // ID found
                 {
                     strncpy(id,ptr+strlen("ESSID:"),9);
-                    //cout << "ID: " << id << endl;
-                    if(strcmp(id,"\"TAS_NET\"") == 0)
+                    if(strcmp(id,"\"TAS_NET\"") == 0)   // correct access Point found
                     {
-                        while(fgets(path, 512, fp) != NULL)
+                        while(fgets(path, 512, fp) != NULL) // get next line
                         {
-                            ptr = strstr(path,"Signal level=");
-                            if(ptr != NULL)
+                            ptr = strstr(path,"Signal level="); // search for the signal level
+                            if(ptr != NULL) // signal level found
                             {
+                                // copy the signal level into the array at the current position
                                 strncpy(level[wlan_count],ptr+strlen("Signal level="),7);
-                                //cout << Addr[wlan_count] << endl;
-                                //cout << "Signal level " << level[wlan_count] << endl;
-                                wlan_count++;
+                                wlan_count++;   // increase the counter after one access point was found
                                 break;
                             }
                         }
                     }
                 }
             }
-            if(wlan_count == 3)
+            if(wlan_count == 3) // if three access points are found don't search any more
                 break;
         }
-        if(wlan_count != 3)
+        if(wlan_count != 3) // could not find three access points
         {
             cout << "Couldn' find all access Points!" << endl;
             return 0;
         }
         else
         {
+            // array for the signal level
             int pos_level[3] = {0};
             for(int i=0; i<3; i++)
             {
-                cout << Addr[i] << "  " << level[i] << endl;
+                // Position 1 found with the corresponding level and sort it into correct position of pos_level
                 if(strcmp(Addr[i],"54:A0:50:5B:4D:E8") == 0)
                 {
                     ptr = strstr(level[i],"/");
@@ -155,6 +156,7 @@ int find_init_pos()
                         pos_level[0] = 100;
                     cout << "Level Pos 1: " << pos_level[0] << endl;
                 }
+                // Position 2 found with the corresponding level and sort it into correct position of pos_level
                 else if(strcmp(Addr[i],"54:A0:50:5B:20:80") == 0)
                 {
                     ptr = strstr(level[i],"/");
@@ -165,6 +167,7 @@ int find_init_pos()
                         pos_level[1] = 100;
                     cout << "Level Pos 2: " << pos_level[1] << endl;
                 }
+                // Position 3 found with the corresponding level and sort it into correct position of pos_level
                 else if(strcmp(Addr[i],"54:A0:50:5B:32:58") == 0)
                 {
                     ptr = strstr(level[i],"/");
@@ -176,20 +179,25 @@ int find_init_pos()
                     cout << "Level Pos 3: " << pos_level[2] << endl;
                 }
             }
+            // Check which Position
+            // signal level of position 1 > than signal level of position 2
+            // or signal level of position 3 (not near to the start position) >Position 2
             if((pos_level[0] > pos_level[1]) || (pos_level[2] > pos_level[1]))
             {
                 cout << "Position 1" << endl;
-                value_return = 1;
+                value_return = 1;   // retrun position 1
             }
+            // signal level of position 2 > than signal level of position 1
+            // or signal level of position 2 (not near to the start position) > Position 3
             else if((pos_level[1] > pos_level[0]) || (pos_level[1] > pos_level[2]))
             {
                 cout << "Position 2" << endl;
-                value_return = 2;
+                value_return = 2;   // retrun position 2
             }
             else
             {
                 cout << "No Position" << endl;
-                value_return = 0;
+                value_return = 0;   // No Position found
             }
         }
         int status = pclose(fp);
