@@ -11,18 +11,24 @@ isright = 0
 old_dist = 0
 dist = 0
 def callback(scan):
+    #indicate if passing cone on the right or left
     global isright
     global old_dist
     global dist
+    #transform scan data to np array
     scan_data = np.array(scan.ranges)
     
-    switch_dist = 1.4
+    #define which neighbors to compare for spikes in scan (every third)
     step = 3
+    #define threshold of scan difference to detect cones
     threshold = 1.1
     scan_size=len(scan_data)
 
+    #get distance from scan to its third neighbor
     diff_scan = scan_data[step:len(scan_data)]-scan_data[0:len(scan_data)-step];
     first_spike = []
+    
+    #find peak for right corner of cone
     for i in xrange(0,len(diff_scan)):
         if(diff_scan[i] < -threshold):
             first_spike.append(i)
@@ -30,23 +36,23 @@ def callback(scan):
     spike_pairs = []
     
     print(first_spike)
-    #print(diff_scan[first_spike[0]])
     
+    #find second peak for left corner
     for i in xrange(0,len(first_spike)):
         x = scan_data[first_spike[i]+step]
 	
         max_cone_size = int(math.floor(-20*x**3+80*x**2-x*120+90))
-	#max_cone_size = int(math.floor(-25*scan_data[first_spike[i]+step]+65))
-	#print(max_cone_size)
         for j in xrange(first_spike[i],min(first_spike[i]+max_cone_size,len(diff_scan))):
             if(diff_scan[j] > threshold):
                 print (j,scan_data[j], diff_scan[j])
                 spike_pairs.append((first_spike[i], j, diff_scan[first_spike[i]]-diff_scan[j]))
-    #print spike_pairs
+    
+    #sort possible cones by biggest difference between first and second spike
     sorted_spikes = sorted(spike_pairs, key=itemgetter(2))
-    #print(sorted_spikes)
     my_spike_pos = -1;
     spike_pos = 0
+    
+    #depending on array indices allocate cone to sector
     if len(sorted_spikes) != 0:
         spike_pos = (sorted_spikes[0][0]+sorted_spikes[0][1])/2
         print spike_pos
@@ -69,12 +75,14 @@ def callback(scan):
         dist = scan_data[spike_pos]
     else:
         print 'no_cone_found'
-    print ('d:', dist, 'od:', old_dist) 
+    #if old cone scan value is very different from current, a new cone is found
     if(abs(dist-old_dist) > 0.5):
+        #switch passing side for the next cone
         isright = not isright
         print 'switch'
     print ('isright', isright)
-    vc2 = 1
+    
+    #depending on sector and passing side, send -1,0 or 1 (straight, left, right)
     min_val = scan_data[my_spike_pos]
     print min_val
     if (my_spike_pos == 0 or my_spike_pos == 1 or my_spike_pos == 2 or my_spike_pos == 3) and isright:
@@ -87,6 +95,7 @@ def callback(scan):
         vel_cmd = -1;
         print 'straight'
 
+    #publish
     pub = rospy.Publisher('cone_position', Int32, queue_size=1000)
     sector = Int32()
     sector.data = vel_cmd
