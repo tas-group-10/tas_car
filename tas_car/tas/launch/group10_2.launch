@@ -11,7 +11,7 @@
 	<node name="simple_navigation_goals_node" pkg="simple_navigation_goals" type="simple_navigation_goals_node" args="2" output="screen"/>
 	
 	<!-- activate node to send initial position -->
-	<node name="send_start" pkg="simple_navigation_goals" type="send_start" output="screen" />
+	<node name="send_start" pkg="simple_navigation_goals" type="send_start" args="2" output="screen" />
 
 	<!-- start laser-merge optional -->
 	<!-- <include file="/home/tas_group_10/catkin_ws/src/ira_laser_tools-master/launch/	laserscan_multi_merger.launch" /> -->

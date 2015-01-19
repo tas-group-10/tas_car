@@ -85,7 +85,6 @@ int main(int argc, char** argv)
             else
             {
                 if(std::string(argv[1]) == "s")
-
                 {
                     autonomous_control.control_servo.x = 1550;
                     if(cone_pos == 0)

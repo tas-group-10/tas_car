@@ -55,18 +55,18 @@ int main(int argc, char** argv){
     waypoints.push_back(waypoint1);
     //Before first curve
     geometry_msgs::Pose waypoint2;
-    waypoint2.position.x = 9.634;
+    waypoint2.position.x = 9.834;
     waypoint2.position.y = 7.55;
     waypoint2.position.z = 0.000;
     waypoint2.orientation.x = 0.0;
     waypoint2.orientation.y = 0.0;
-    waypoint2.orientation.z = -0.71987;
-    waypoint2.orientation.w = 0.69416;
+    waypoint2.orientation.z = -0.716;
+    waypoint2.orientation.w = 0.7;
     waypoints.push_back(waypoint2);  
     //After first curve
     geometry_msgs::Pose waypoint3;
     waypoint3.position.x = 12.28;
-    waypoint3.position.y = 7.120;
+    waypoint3.position.y = 6.220;
     waypoint3.position.z = 0.000;
     waypoint3.orientation.x = 0.0;
     waypoint3.orientation.y = 0.0;
@@ -75,8 +75,8 @@ int main(int argc, char** argv){
     waypoints.push_back(waypoint3);
     //Before the small door, Laith office
     geometry_msgs::Pose waypoint4;
-    waypoint4.position.x = 22.95397;
-    waypoint4.position.y = 6.28584;
+    waypoint4.position.x = 22.55397;
+    waypoint4.position.y = 5.68584;
     waypoint4.position.z = 0.000;
     waypoint4.orientation.x = 0.0;
     waypoint4.orientation.y = 0.0;
@@ -85,18 +85,18 @@ int main(int argc, char** argv){
     waypoints.push_back(waypoint4);
     //After small door
     geometry_msgs::Pose waypoint5;
-    waypoint5.position.x = 23.59;
-    waypoint5.position.y = 8.130;
+    waypoint5.position.x = 23.50;
+    waypoint5.position.y = 8.00;
     waypoint5.position.z = 0.000;
     waypoint5.orientation.x = 0.0;
     waypoint5.orientation.y = 0.0;
-    waypoint5.orientation.z = 0.7278;
-    waypoint5.orientation.w = 0.68579;
+    waypoint5.orientation.z = 0.6978;
+    waypoint5.orientation.w = 0.71579;
     waypoints.push_back(waypoint5);
     //Before Lab
     geometry_msgs::Pose waypoint6;
-    waypoint6.position.x = 23.6083;
-    waypoint6.position.y = 17.0;
+    waypoint6.position.x = 24.2083;
+    waypoint6.position.y = 18.0;
     waypoint6.position.z = 0.000;
     waypoint6.orientation.x = 0.0;
     waypoint6.orientation.y = 0.0;
@@ -110,8 +110,8 @@ int main(int argc, char** argv){
     waypoint7.position.z = 0.000;
     waypoint7.orientation.x = 0.0;
     waypoint7.orientation.y = 0.0;
-    waypoint7.orientation.z = 0.6802;
-    waypoint7.orientation.w = 0.73299;
+    waypoint7.orientation.z = 1.0;
+    waypoint7.orientation.w = 0.017;
     waypoints.push_back(waypoint7);
     //Goal
     geometry_msgs::Pose waypoint8;
@@ -127,7 +127,11 @@ int main(int argc, char** argv){
     int bias=0;
 
     if(std::string(argv[1]) == "2"){ //[0]...rosrun, [1]...simple, [2]simple,  [3]...s
-        bias = 6;
+        bias = 5;
+        ROS_INFO(std::string(argv[0]).c_str());
+        ROS_INFO(std::string(argv[1]).c_str());
+        ROS_INFO(std::string(argv[2]).c_str());
+        ROS_INFO(std::string(argv[3]).c_str());
     }
 
     MoveBaseClient ac("move_base", true); // action client to spin a thread by default
